@@ -1,6 +1,0 @@
-module SPI_Main(
-	input cs,
-	input sclk,
-	input sdi,
-	output sdo
-)
