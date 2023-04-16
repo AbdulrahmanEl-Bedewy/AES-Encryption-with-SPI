@@ -1,0 +1,4 @@
+*.bak
+*.qpf
+*.qsf
+db/
