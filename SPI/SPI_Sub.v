@@ -46,5 +46,3 @@ assign tx_reg = tx;
 
 
 endmodule
-
-Message gaser, Thotimus Prime

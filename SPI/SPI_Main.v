@@ -60,3 +60,5 @@ always @(negedge sclk) begin
 		rbit <= rbit - 1;
 	end 
 end
+
+endmodule
