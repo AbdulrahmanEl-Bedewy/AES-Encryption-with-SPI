@@ -1,4 +1,4 @@
-module SPI_Main(
+module SPI_Main (
 	input clk,
 	input miso,
 	input start
@@ -12,9 +12,12 @@ module SPI_Main(
 
 reg [2:0] tbit;
 reg [2:0] rbit;
-reg state; // 00 send 01 receive 10 done
+reg state; // 00 send/receive 1 done
+initial begin
+	state = 0;
+end
 
-always @(posedge clk) begin
+always @(*) begin
 	case(state)
 		0: begin //IDLE
 			sclk = 1'b0;
@@ -29,7 +32,7 @@ always @(posedge clk) begin
 			end
 		end
 		1: begin // Send/receive
-			sclk = ~sclk;
+//			sclk = ~sclk;
 			if(rbit == 0 && tbit == 0) begin
 				done = 1;
 				state = 1'd0;
@@ -38,12 +41,16 @@ always @(posedge clk) begin
 	endcase	
 end
 
+always @(state) begin
+	#5 sclk = ~sclk;
+end
+
 always @(posedge sclk) begin
 	if(tbit >= 3'd0)begin
 		mosi = tx[currbit];
 		tbit <= tbit - 1;
 	end else begin //if(currbit == 4'd0) all 8 bits are sent
-		miso = 0;
+		mosi = 0;
 	end
 end
 
@@ -51,7 +58,5 @@ always @(negedge sclk) begin
 	if(rbit >= 3'd0)begin
 		rx = {rx[6:0], miso};
 		rbit <= rbit - 1;
-	end else begin //if(currbit == 4'd0) all 8 bits are sent
-		miso = 0;
-	end
+	end 
 end
