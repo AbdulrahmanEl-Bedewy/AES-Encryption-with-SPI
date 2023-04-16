@@ -1,7 +1,7 @@
 module SPI_Main (
 	input clk,
 	input miso,
-	input start
+	input start,
 	input [7:0] tx,
 	output [7:0] rx,
 	output cs_n,
