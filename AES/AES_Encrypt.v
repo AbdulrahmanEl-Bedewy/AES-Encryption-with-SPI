@@ -3,7 +3,7 @@ module AES_Encrypt #(parameter Nk = 4)( //Nk = 4 for 128 bit key, 6 for 192 bit 
     input sclk,
     input sdi,
     output sdo,
-    output ready,
+    output ready
 );
 
 SPI_sub #(.DATA_OUT(32*Nk)) SPI_sub_inst(

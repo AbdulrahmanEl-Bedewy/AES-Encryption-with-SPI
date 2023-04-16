@@ -3,12 +3,13 @@ module SPI_Main (
 	input miso,
 	input start,
 	input [7:0] tx,
-	output [7:0] rx,
-	output cs_n,
-	output sclk,
-	output mosi,
-	output done
-)
+	output reg [7:0] rx,
+	output reg cs_n,
+	output reg sclk,
+	output reg mosi,
+	output reg done
+);
+
 
 reg [2:0] tbit;
 reg [2:0] rbit;
@@ -47,7 +48,7 @@ end
 
 always @(posedge sclk) begin
 	if(tbit >= 3'd0)begin
-		mosi = tx[currbit];
+		mosi = tx[tbit];
 		tbit <= tbit - 1;
 	end else begin //if(currbit == 4'd0) all 8 bits are sent
 		mosi = 0;

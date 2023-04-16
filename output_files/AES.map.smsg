@@ -1,0 +1,2 @@
+Warning (10268): Verilog HDL information at SPI_Main.v(49): always construct contains both blocking and non-blocking assignments File: D:/UNI/Junior/Spring/Logic 2/AES-Encryption/SPI/SPI_Main.v Line: 49
+Warning (10268): Verilog HDL information at SPI_Main.v(58): always construct contains both blocking and non-blocking assignments File: D:/UNI/Junior/Spring/Logic 2/AES-Encryption/SPI/SPI_Main.v Line: 58

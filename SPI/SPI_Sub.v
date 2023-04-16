@@ -5,8 +5,8 @@ module SPI_sub #(parameter DATA_OUT = 128)(
     input [DATA_OUT-1:0] tx, // sent from AES module
     output [DATA_OUT-1:0] rx, // sent to AES module
     output sdo,
-    output done,
-)
+    output done
+);
 
 reg [DATA_OUT-1:0] tx_reg, rx_reg;
 
@@ -33,7 +33,7 @@ assign done = i==DATA_OUT;
 //send on posedge
 always @ (posedge sclk) begin
     if (~cs && j<DATA_OUT) begin
-        sdo <= tx_reg[DATA_OUT-1-j];
+//        sdo <= tx_reg[DATA_OUT-1-j];
         tx_reg <= tx_reg<<1;
         j<=j+1;
     end
@@ -42,7 +42,7 @@ always @ (posedge sclk) begin
     end
 end
 
-assign tx_reg = tx;
+//assign tx_reg = tx;
 
 
 endmodule
