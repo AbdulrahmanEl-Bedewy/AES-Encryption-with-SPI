@@ -2,7 +2,6 @@ module Cipher #(parameter Nr=10,parameter Nk = 4)( //Nk = 4 for 128 bit key, 6 f
     input [127:0]state, //chip select
     input [(128*(Nr+1))-1:0] w,
     output [127:0] Encrypted_Msg,
-    output ready
 );
 
 
@@ -48,9 +47,9 @@ AddRoundKey k3(
     .key(AllKeys[Nr*128+:128])
     .ostate(state)
 );
-Encrypted_Msg = state;
 
 
+assign Encrypted_Msg = state;
 
 
 endmodule
