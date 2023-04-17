@@ -1,4 +1,4 @@
-module Cipher_tb(
+module InvCipher_tb(
     output [127:0] out
 );
 
@@ -15,14 +15,14 @@ KeyExpansion #(Nk,Nr)KE1 (
     .w(w)
 );
 
-Cipher #(Nk,Nr) C1 (
+InvCipher #(Nk,Nr) C1 (
     .init(in),
     .w(w),
-    .Encrypted_Msg(out)
+    .Decrypted_Msg(out)
 );
 
 initial begin
-    in = 128'h00112233445566778899aabbccddeeff;
+    in = 128'h8ea2b7ca516745bfeafc49904b496089;
     key = 256'h000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f;
     
     #10000;

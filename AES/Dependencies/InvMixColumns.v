@@ -44,7 +44,7 @@ endfunction
 function [7:0] mult14 // e
     (input [7:0] x);
     begin
-        mult14 = mult13(x) ^ x;
+        mult14 = mult9(x) ^ mult2(mult2(x));
     end
 endfunction
 

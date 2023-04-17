@@ -1,15 +1,15 @@
-module Cipher #(parameter Nr=10,parameter Nk = 4)( //Nk = 4 for 128 bit key, 6 for 192 bit key, 8 for 256 bit key
-    input [127:0]init,
-    input [(128*(Nr+1))-1:0] w,
-    output [127:0] Encrypted_Msg
+module Cipher #(parameter Nk = 4,parameter Nr=10)( //Nk = 4 for 128 bit key, 6 for 192 bit key, 8 for 256 bit key
+    input [0:127]init,
+    input [0:128*(Nr+1)-1] w,
+    output [0:127] Encrypted_Msg
 );
 
-wire [127:0] state [Nr+1:0],aSub[Nr+1:0],aShift[Nr+1:0],aMix[Nr+1:0],aAdd[Nr+1:0];
+wire [0:127] state [0:Nr],aSub[0:Nr],aShift[0:Nr],aMix[0:Nr];
 
 
 AddRoundKey k1(
     .istate(init),
-    .key(w[0+:128]),
+    .key(w[0:127]),
     .ostate(state[0])
 );
 
