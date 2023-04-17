@@ -1,4 +1,4 @@
-module mixColumns (
+module MixColumns (
     input [127:0] state,
     output [127:0] ostate
 );
