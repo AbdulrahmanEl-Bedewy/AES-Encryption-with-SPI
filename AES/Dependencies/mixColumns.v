@@ -19,7 +19,7 @@ generate
 endgenerate
 
 function [7:0] mult2
-    (input [7:0] x)
+    (input [7:0] x);
     begin
         if (x[7]==1'b0) mult2 = x<<1;
         else mult2 = (x<<1) ^ 8'h1b;
@@ -27,7 +27,7 @@ function [7:0] mult2
 endfunction
 
 function [7:0] mult3
-    (input [7:0] x)
+    (input [7:0] x);
     begin
         mult3 = mult2(x) ^ x;
     end
