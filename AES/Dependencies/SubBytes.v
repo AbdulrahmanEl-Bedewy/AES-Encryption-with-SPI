@@ -6,9 +6,9 @@ module SubBytes (
 genvar i;
 generate
 	for(i=0;i<16;i=i+1) begin : SubBytes
-		S_Box sbox_inst(
-			.istate(istate[i*8+7:i*8]),
-			.ostate(ostate[i*8+7:i*8])
+		S_Box sub_inst(
+			.istate(istate[8*i+7:8*i]),
+			.ostate(ostate[8*i+7:8*i])
 		);
 	end
 endgenerate

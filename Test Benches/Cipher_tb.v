@@ -9,12 +9,12 @@ wire [(128*(10+1))-1:0] w;
 localparam Nr = 10;
 localparam Nk = 4;
 
-KeyExpansion KE1 #(Nk,Nr)(
+KeyExpansion #(Nk,Nr)KE1 (
     .key(key),
     .w(w)
 );
 
-Cipher C1 #(Nr,Nk)(
+Cipher #(Nr,Nk) C1 (
     .init(in),
     .w(w),
     .Encrypted_Msg(out)
