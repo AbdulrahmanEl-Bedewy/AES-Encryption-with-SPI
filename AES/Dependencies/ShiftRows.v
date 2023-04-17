@@ -3,8 +3,8 @@ module ShiftRows #(parameter DATA_SIZE = 128, parameter Nb = 4) (
     output [127:0] ostatestate
 );
 
-reg [7:0] istate[0:3][0:Nb-1];
-wire [7:0] ostatestate[0:3][0:Nb-1];
+reg [127:0] istate;
+wire [127:0] ostatestate;
 
 
 //bottom most row r = 4 (1 indexed)
