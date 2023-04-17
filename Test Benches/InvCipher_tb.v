@@ -3,8 +3,8 @@ module InvCipher_tb(
 );
 
 
-localparam Nr = 14;
-localparam Nk = 8;
+localparam Nr = 10;
+localparam Nk = 4;
 
 reg [127:0] in;
 reg [32*Nk-1:0] key;
@@ -22,10 +22,10 @@ InvCipher #(Nk,Nr) C1 (
 );
 
 initial begin
-    in = 128'h8ea2b7ca516745bfeafc49904b496089;
-    key = 256'h000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f;
+    in = 128'h69c4e0d86a7b0430d8cdb78070b4c55a;
+    key = 128'h000102030405060708090a0b0c0d0e0f;
     
-    #10000;
+    #100;
     $display("out = %h \n",out);
 end
 
