@@ -1,7 +1,7 @@
-Analysis & Synthesis Status : Failed - Sun Apr 16 15:31:40 2023
+Analysis & Synthesis Status : Failed - Mon Apr 17 20:30:37 2023
 Quartus Prime Version : 18.1.0 Build 625 09/12/2018 SJ Lite Edition
 Revision Name : AES
-Top-level Entity Name : AES
+Top-level Entity Name : Cipher_tb
 Family : Cyclone V
 Logic utilization (in ALMs) : N/A until Partition Merge
 Total registers : N/A until Partition Merge

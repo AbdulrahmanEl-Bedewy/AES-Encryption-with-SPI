@@ -3,8 +3,8 @@ module InvShiftRows (
     output [127:0] ostate
 );
 
-reg [127:0] istate;
-wire [127:0] ostate;
+//reg [127:0] istate;
+//wire [127:0] ostate;
 
 
 //top most row r = 1 (1 indexed)

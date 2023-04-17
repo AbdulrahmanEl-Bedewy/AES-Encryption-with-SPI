@@ -12,7 +12,7 @@ module InvMixColumns (
 
 // b d e
 
-function [7:0] mult2;
+function [7:0] mult2
     (input [7:0] x);
     begin
         if(x[7]==1'b0) mult2 = x<<1;
@@ -20,29 +20,29 @@ function [7:0] mult2;
     end
 endfunction
 
-function [7:0] mult9; // 9
+function [7:0] mult9 // 9
     (input [7:0] x);
     begin
         mult9 = mult2(mult2(mult2(x))) ^ x;
     end
 endfunction
 
-function [7:0] mult11;// b
+function [7:0] mult11// b
     (input [7:0] x);
     begin
         mult11 = mult9(x) ^ mult2(x);
     end
 endfunction
 
-function [7:0] mult13; // d
+function [7:0] mult13 // d
     (input [7:0] x);
     begin
         mult13 = mult11(x) ^ mult2(x);
     end
 endfunction
 
-function [7:0] mult14; // e
-    (intput [7:0] x);
+function [7:0] mult14 // e
+    (input [7:0] x);
     begin
         mult14 = mult13(x) ^ x;
     end

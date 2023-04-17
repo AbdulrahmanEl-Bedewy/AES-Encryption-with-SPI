@@ -1,5 +1,5 @@
 Analysis & Synthesis report for AES
-Sun Apr 16 15:31:40 2023
+Mon Apr 17 20:30:37 2023
 Quartus Prime Version 18.1.0 Build 625 09/12/2018 SJ Lite Edition
 
 
@@ -37,10 +37,10 @@ refer to the applicable agreement for further details.
 +---------------------------------------------------------------------------+
 ; Analysis & Synthesis Summary                                              ;
 +-----------------------------+---------------------------------------------+
-; Analysis & Synthesis Status ; Failed - Sun Apr 16 15:31:40 2023           ;
+; Analysis & Synthesis Status ; Failed - Mon Apr 17 20:30:37 2023           ;
 ; Quartus Prime Version       ; 18.1.0 Build 625 09/12/2018 SJ Lite Edition ;
 ; Revision Name               ; AES                                         ;
-; Top-level Entity Name       ; AES                                         ;
+; Top-level Entity Name       ; Cipher_tb                                   ;
 ; Family                      ; Cyclone V                                   ;
 ; Logic utilization (in ALMs) ; N/A until Partition Merge                   ;
 ; Total registers             ; N/A until Partition Merge                   ;
@@ -58,7 +58,7 @@ refer to the applicable agreement for further details.
 ; Option                                                                          ; Setting            ; Default Value      ;
 +---------------------------------------------------------------------------------+--------------------+--------------------+
 ; Device                                                                          ; 5CSEMA5F31C6       ;                    ;
-; Top-level entity name                                                           ; AES                ; AES                ;
+; Top-level entity name                                                           ; Cipher_tb          ; AES                ;
 ; Family name                                                                     ; Cyclone V          ; Cyclone V          ;
 ; Use smart compilation                                                           ; Off                ; Off                ;
 ; Enable parallel Assembler and Timing Analyzer during compilation                ; On                 ; On                 ;
@@ -161,26 +161,56 @@ refer to the applicable agreement for further details.
 Info: *******************************************************************
 Info: Running Quartus Prime Analysis & Synthesis
     Info: Version 18.1.0 Build 625 09/12/2018 SJ Lite Edition
-    Info: Processing started: Sun Apr 16 15:31:17 2023
+    Info: Processing started: Mon Apr 17 20:30:26 2023
 Info: Command: quartus_map --read_settings_files=on --write_settings_files=off AES -c AES
 Warning (18236): Number of processors has not been specified which may cause overloading on shared machines.  Set the global assignment NUM_PARALLEL_PROCESSORS in your QSF to an appropriate value for best performance.
 Info (20030): Parallel compilation is enabled and will use 6 of the 6 processors detected
+Warning (10275): Verilog HDL Module Instantiation warning at Cipher_tb.v(18): ignored dangling comma in List of Port Connections File: D:/UNI/Junior/Spring/Logic 2/AES-Encryption/Test Benches/Cipher_tb.v Line: 18
+Info (12021): Found 1 design units, including 1 entities, in source file test benches/cipher_tb.v
+    Info (12023): Found entity 1: Cipher_tb File: D:/UNI/Junior/Spring/Logic 2/AES-Encryption/Test Benches/Cipher_tb.v Line: 1
+Info (12021): Found 1 design units, including 1 entities, in source file aes/invcipher.v
+    Info (12023): Found entity 1: InvCipher File: D:/UNI/Junior/Spring/Logic 2/AES-Encryption/AES/InvCipher.v Line: 1
+Info (12021): Found 1 design units, including 1 entities, in source file aes/cipher.v
+    Info (12023): Found entity 1: Cipher File: D:/UNI/Junior/Spring/Logic 2/AES-Encryption/AES/Cipher.v Line: 1
+Info (12021): Found 1 design units, including 1 entities, in source file aes/dependencies/subbytes.v
+    Info (12023): Found entity 1: SubBytes File: D:/UNI/Junior/Spring/Logic 2/AES-Encryption/AES/Dependencies/SubBytes.v Line: 1
+Info (12021): Found 1 design units, including 1 entities, in source file aes/dependencies/shiftrows.v
+    Info (12023): Found entity 1: ShiftRows File: D:/UNI/Junior/Spring/Logic 2/AES-Encryption/AES/Dependencies/ShiftRows.v Line: 1
+Info (12021): Found 1 design units, including 1 entities, in source file aes/dependencies/s_box.v
+    Info (12023): Found entity 1: S_Box File: D:/UNI/Junior/Spring/Logic 2/AES-Encryption/AES/Dependencies/S_Box.v Line: 1
+Info (12021): Found 1 design units, including 1 entities, in source file aes/dependencies/mixcolumns.v
+    Info (12023): Found entity 1: MixColumns File: D:/UNI/Junior/Spring/Logic 2/AES-Encryption/AES/Dependencies/MixColumns.v Line: 1
+Info (12021): Found 1 design units, including 1 entities, in source file aes/dependencies/keyexpansion.v
+    Info (12023): Found entity 1: KeyExpansion File: D:/UNI/Junior/Spring/Logic 2/AES-Encryption/AES/Dependencies/KeyExpansion.v Line: 1
+Info (12021): Found 1 design units, including 1 entities, in source file aes/dependencies/invsubbytes.v
+    Info (12023): Found entity 1: InvSubBytes File: D:/UNI/Junior/Spring/Logic 2/AES-Encryption/AES/Dependencies/InvSubBytes.v Line: 1
+Info (12021): Found 1 design units, including 1 entities, in source file aes/dependencies/invshiftrows.v
+    Info (12023): Found entity 1: InvShiftRows File: D:/UNI/Junior/Spring/Logic 2/AES-Encryption/AES/Dependencies/InvShiftRows.v Line: 1
+Info (12021): Found 1 design units, including 1 entities, in source file aes/dependencies/invs_box.v
+    Info (12023): Found entity 1: InvS_Box File: D:/UNI/Junior/Spring/Logic 2/AES-Encryption/AES/Dependencies/InvS_Box.v Line: 1
+Info (12021): Found 1 design units, including 1 entities, in source file aes/dependencies/invmixcolumns.v
+    Info (12023): Found entity 1: InvMixColumns File: D:/UNI/Junior/Spring/Logic 2/AES-Encryption/AES/Dependencies/InvMixColumns.v Line: 1
+Info (12021): Found 1 design units, including 1 entities, in source file aes/dependencies/addroundkey.v
+    Info (12023): Found entity 1: AddRoundKey File: D:/UNI/Junior/Spring/Logic 2/AES-Encryption/AES/Dependencies/AddRoundKey.v Line: 1
 Info (12021): Found 1 design units, including 1 entities, in source file spi/spi_sub.v
     Info (12023): Found entity 1: SPI_sub File: D:/UNI/Junior/Spring/Logic 2/AES-Encryption/SPI/SPI_Sub.v Line: 1
 Info (12021): Found 1 design units, including 1 entities, in source file spi/spi_main.v
     Info (12023): Found entity 1: SPI_Main File: D:/UNI/Junior/Spring/Logic 2/AES-Encryption/SPI/SPI_Main.v Line: 1
-Info (12021): Found 1 design units, including 1 entities, in source file aes/aes_encrypt.v
-    Info (12023): Found entity 1: AES_Encrypt File: D:/UNI/Junior/Spring/Logic 2/AES-Encryption/AES/AES_Encrypt.v Line: 1
-Info (12021): Found 0 design units, including 0 entities, in source file aes/aes_decrypt.v
-Info (12021): Found 1 design units, including 1 entities, in source file subbytes.v
-    Info (12023): Found entity 1: SubBytes File: D:/UNI/Junior/Spring/Logic 2/AES-Encryption/SubBytes.v Line: 1
-Error (12007): Top-level design entity "AES" is undefined
+Warning (12019): Can't analyze file -- file AES/AES_Encrypt.v is missing
+Warning (12019): Can't analyze file -- file AES/AES_Decrypt.v is missing
+Warning (12019): Can't analyze file -- file SubBytes.v is missing
+Warning (12019): Can't analyze file -- file AES.v is missing
+Info (12127): Elaborating entity "Cipher_tb" for the top level hierarchy
+Warning (10175): Verilog HDL warning at Cipher_tb.v(24): ignoring unsupported system task File: D:/UNI/Junior/Spring/Logic 2/AES-Encryption/Test Benches/Cipher_tb.v Line: 24
+Info (12128): Elaborating entity "KeyExpansion" for hierarchy "KeyExpansion:KE1" File: D:/UNI/Junior/Spring/Logic 2/AES-Encryption/Test Benches/Cipher_tb.v Line: 12
+Error (10663): Verilog HDL Port Connection error at KeyExpansion.v(63): output or inout port "ostate" must be connected to a structural net expression File: D:/UNI/Junior/Spring/Logic 2/AES-Encryption/AES/Dependencies/KeyExpansion.v Line: 63
+Error (12152): Can't elaborate user hierarchy "KeyExpansion:KE1" File: D:/UNI/Junior/Spring/Logic 2/AES-Encryption/Test Benches/Cipher_tb.v Line: 12
 Info (144001): Generated suppressed messages file D:/UNI/Junior/Spring/Logic 2/AES-Encryption/output_files/AES.map.smsg
-Error: Quartus Prime Analysis & Synthesis was unsuccessful. 1 error, 1 warning
-    Error: Peak virtual memory: 4767 megabytes
-    Error: Processing ended: Sun Apr 16 15:31:40 2023
-    Error: Elapsed time: 00:00:23
-    Error: Total CPU time (on all processors): 00:00:57
+Error: Quartus Prime Analysis & Synthesis was unsuccessful. 2 errors, 7 warnings
+    Error: Peak virtual memory: 4773 megabytes
+    Error: Processing ended: Mon Apr 17 20:30:37 2023
+    Error: Elapsed time: 00:00:11
+    Error: Total CPU time (on all processors): 00:00:26
 
 
 +------------------------------------------+

@@ -1,19 +1,19 @@
 module InvCipher #(parameter Nr=10,parameter Nk=4)(
     input [127:0]state, 
     input [(128*(Nr+1))-1:0] w,
-    output [127:0] Decrypted_Msg,
+    output [127:0] Decrypted_Msg
 );
 
-wire [127:0] state,Decrypted_Msg;
+//wire [127:0] state,Decrypted_Msg;
 
 genvar round;
 generate
     AddRoundKey k1(
-        .state(state)
-        .key(w[Nr*128+:128])
+        .state(state),
+        .key(w[Nr*128+:128]),
         .ostate(state)
     );
-    for(round=Nr-1; round>=1; round=round-1) begin
+    for(round=Nr-1; round>=1; round=round-1) begin : invCipher
         InvShiftRows shiftRows_inst1(
             .istate(state),
             .ostate(state)
@@ -23,8 +23,8 @@ generate
             .ostate(state)
         );
         AddRoundKey k2(
-            .state(state)
-            .key(w[round*128+:128])
+            .state(state),
+            .key(w[round*128+:128]),
             .ostate(state)
         );
         InvMixColumns mixColumns_inst1(
@@ -42,8 +42,8 @@ generate
         .ostate(state)
     );
     AddRoundKey k3(
-        .state(state)
-        .key(w[0+:128])
+        .state(state),
+        .key(w[0+:128]),
         .ostate(state)
     );
 endgenerate

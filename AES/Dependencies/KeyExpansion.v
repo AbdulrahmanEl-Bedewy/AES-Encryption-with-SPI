@@ -1,6 +1,6 @@
 module KeyExpansion #(parameter Nk=4,parameter Nr=10)(
     input [(Nk*32)-1:0] key,
-    output reg [(128*(Nr+1))-1:0] w
+    output wire [(128*(Nr+1))-1:0] w
 );
 
 // Rotate [a0,a1,a2,a3] to [a1,a2,a3,a0]
@@ -35,45 +35,66 @@ function [7:0] Rcon
     end
 endfunction
 
+reg [31:0] temp;
+wire [31:0] temp2;
+reg [31:0] rotated;
+wire [31:0] subbed;
 
-genvar i;
-generate 
-    assign w[0+:32*Nk] = key[0+:32*Nk];
+
+S_Box sbox_inst1(
+    .istate(rotated[0+:8]),
+    .ostate(subbed[0+:8])
+);
+S_Box sbox_inst2(
+    .istate(rotated[1*8+:8]),
+    .ostate(subbed[1*8+:8])
+);
+S_Box sbox_inst3(
+    .istate(rotated[2*8+:8]),
+    .ostate(subbed[2*8+:8])
+);
+S_Box sbox_inst4(
+    .istate(rotated[3*8+:8]),
+    .ostate(subbed[3*8+:8])
+);
+
+S_Box sbox_inst5(
+    .istate(temp[0*8+:8]),
+    .ostate(temp2[0*8+:8])
+);
+S_Box sbox_inst6(
+    .istate(temp[1*8+:8]),
+    .ostate(temp2[1*8+:8])
+);
+S_Box sbox_inst7(
+    .istate(temp[2*8+:8]),
+    .ostate(temp2[2*8+:8])
+);
+S_Box sbox_inst8(
+    .istate(temp[3*8+:8]),
+    .ostate(temp2[3*8+:8])
+);
+
+
+assign w[0+:32*Nk] = key[0+:32*Nk];
+
+integer i,j;
+always @(*) begin 
     // i = Nk ; i<Nb*(Nr+1) ;i++
-    for(i=Nk;i<4*(Nr+1); i=i+1) begin 
-        reg [31:0] temp;
-        assign temp = w[(i-1)*32+:32];
+    for(i=Nk;i<4*(Nr+1); i=i+1) begin :KeyExp
+        temp = w[(i-1)*32+:32];
         if(i%Nk==0) begin
             // temp = SubWord(RotWord(temp)) ^ Rcon(i/Nk);
-            reg [31:0] rotated = Rotword(temp);
-            // assign temp = SubWord(rotated) ^ Rcon(i/Nk);
-            reg [31:0] subbed;
-            genvar j;
-            generate
-                for(j=0; j<4; j=j+1) begin
-                    S_Box sbox_inst(
-                        .istate(rotated[j*8+:8]),
-                        .ostate(subbed[j*8+:8])
-                    );
-                end
-            endgenerate
-            assign temp = subbed ^ {Rcon(i/Nk),8'h00,8'h00,8'h00};
+            rotated = Rotword(temp);
+            // assign temp = SubWord(rotated) ^ Rcon(i/Nk);           
+            temp = subbed ^ {Rcon(i/Nk),8'h00,8'h00,8'h00};
         end
-        else if(Nk>6 && i%Nk=4) begin
-            genvar j;
-            generate
-                for(j=0; j<4; j=j+1) begin
-                    S_Box sbox_inst(
-                        .istate(temp[j*8+:8]),
-                        .ostate(temp[j*8+:8])
-                    );
-                end
-            endgenerate
+        else if(Nk>6 && i%Nk==4) begin
+            temp = temp2;
         end
-        // w[i] = w[i-Nk] ^ temp;
-        assign w[i*32+:32] = w[(i-Nk)*32+:32] ^ temp;
     end
-endgenerate
+end
 
+assign w[i*32+:32] = w[(i-Nk)*32+:32] ^ temp[i];
 endmodule
 
