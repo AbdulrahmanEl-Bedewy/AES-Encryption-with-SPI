@@ -1,19 +1,16 @@
-module SubBytes #(parameter DATA_SIZE=128)(
-	input istate,
-	output ostate
+module SubBytes (
+	input [127:0] istate,
+	output [127:0] ostate
 );
-input [DATA_SIZE-1:0] istate;
-output [DATA_SIZE-1:0] ostate;
 
 genvar i;
 generate
-	for(i=0;i<DATA_SIZE;i=i+8) begin : SubBytes
+	for(i=0;i<16;i=i+1) begin : SubBytes
 		S_Box sbox_inst(
-			.istate(istate[i+7:i]),
-			.ostate(ostate[i+7:i])
+			.istate(istate[i*8+7:i*8]),
+			.ostate(ostate[i*8+7:i*8])
 		);
 	end
 endgenerate
-
 
 endmodule 
