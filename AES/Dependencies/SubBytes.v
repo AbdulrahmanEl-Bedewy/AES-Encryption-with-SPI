@@ -2,6 +2,7 @@ module SubBytes #(parameter DATA_SIZE=128)(
 	input istate,
 	output ostate
 );
+
 input [DATA_SIZE-1:0] istate;
 output [DATA_SIZE-1:0] ostate;
 
