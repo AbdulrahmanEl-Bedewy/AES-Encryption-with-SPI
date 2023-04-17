@@ -6,15 +6,18 @@ reg [127:0] in;
 reg [127:0] key;
 wire [(128*(10+1))-1:0] w;
 
-KeyExpansion KE1(
+localparam Nr = 10;
+localparam Nk = 4;
+
+KeyExpansion KE1 #(Nk,Nr)(
     .key(key),
     .w(w)
 );
 
-Cipher C1(
-    .state(in),
+Cipher C1 #(Nr,Nk)(
+    .init(in),
     .w(w),
-    .Encrypted_Msg(out),
+    .Encrypted_Msg(out)
 );
 
 initial begin

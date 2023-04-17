@@ -1,6 +1,6 @@
 module KeyExpansion #(parameter Nk=4,parameter Nr=10)(
     input [(Nk*32)-1:0] key,
-    output wire [(128*(Nr+1))-1:0] w
+    output reg [(128*(Nr+1))-1:0] w
 );
 
 // Rotate [a0,a1,a2,a3] to [a1,a2,a3,a0]
@@ -76,7 +76,9 @@ S_Box sbox_inst8(
 );
 
 
-assign w[0+:32*Nk] = key[0+:32*Nk];
+initial begin
+	w[0+:32*Nk] = key[0+:32*Nk];
+end
 
 integer i,j;
 always @(*) begin 
@@ -92,9 +94,9 @@ always @(*) begin
         else if(Nk>6 && i%Nk==4) begin
             temp = temp2;
         end
+        w[i*32+:32] = w[(i-Nk)*32+:32] ^ temp;
     end
 end
 
-assign w[i*32+:32] = w[(i-Nk)*32+:32] ^ temp[i];
 endmodule
 
