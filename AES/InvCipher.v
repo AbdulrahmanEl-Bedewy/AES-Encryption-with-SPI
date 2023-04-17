@@ -6,14 +6,13 @@ module InvCipher #(parameter Nr=10,parameter Nk=4)(
 
 wire [127:0] state,Decrypted_Msg;
 
-AddRoundKey k1(
-    .state(state)
-    .key(w[Nr*128+:128])
-    .ostate(state)
-);
-
 genvar round;
 generate
+    AddRoundKey k1(
+        .state(state)
+        .key(w[Nr*128+:128])
+        .ostate(state)
+    );
     for(round=Nr-1; round>=1; round=round-1) begin
         InvShiftRows shiftRows_inst1(
             .istate(state),
@@ -47,8 +46,8 @@ generate
         .key(w[0+:128])
         .ostate(state)
     );
-    assign Decrypted_Msg = state;
 endgenerate
+assign Decrypted_Msg = state;
 
 
 endmodule

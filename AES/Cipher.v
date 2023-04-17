@@ -7,14 +7,14 @@ module Cipher #(parameter Nr=10,parameter Nk = 4)( //Nk = 4 for 128 bit key, 6 f
 
 wire [127:0] state,Encrypted_Msg;
 
-AddRoundKey k1(
-    .state(state)
-    .key(w[0+:128])
-    .ostate(state)
-);
-genvar j;
+genvar round;
 generate
-    for(j=0; j<Nr; j=j+1) begin
+    AddRoundKey k1(
+        .state(state)
+        .key(w[0+:128])
+        .ostate(state)
+    );
+    for(round=1; round<Nr; round=round+1) begin
         SubBytes subBytes_inst1(
             .istate(state),
             .ostate(state)
@@ -29,7 +29,7 @@ generate
         );
         AddRoundKey k2(
             .state(state)
-            .key(w[j*128+:128])
+            .key(w[round*128+:128])
             .ostate(state)
         );
     end
@@ -46,8 +46,8 @@ generate
         .key(w[Nr*128+:128])
         .ostate(state)
     );
-    assign Encrypted_Msg = state;
 endgenerate
+assign Encrypted_Msg = state;
 
 
 endmodule
