@@ -48,7 +48,7 @@ initial begin
 //	miso = 1'b1;
 	#20 start = 1'b1;
 	#20 start = 1'b0;
-	#1700
+	#1800
 	
 	
 	txMain = 128'h99999999999999999;
@@ -56,14 +56,14 @@ initial begin
 	
 	start = 1'b1;
 	#20 start = 1'b0;
-	#1700
+	#1800
 
 	
 	txMain = 128'habde1;
 	txSub = 128'hfa4d;
 	start = 1'b1;
 	#20 start = 1'b0;
-	#1700;
+	#1800;
 
 	
 end

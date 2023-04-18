@@ -2,8 +2,8 @@ module SPI_Main (
 	input clk,
 	input miso,
 	input start,
-	input [127:0] tx,
-	output reg [127:0] rx,
+	input [0:127] tx,
+	output reg [0:127] rx,
 	output reg cs_n,
 	output reg sclk,
 	output reg mosi,
@@ -11,14 +11,14 @@ module SPI_Main (
 );
 
 
-reg [6:0] tbit;
-reg [6:0] rbit;
+reg [7:0] tbit;
+reg [7:0] rbit;
 reg state; // 00 send/receive 1 done
 initial begin
 	state = 1'b0;
 	sclk = 1'b0;
-	tbit = 7'd127;
-	rbit = 7'd127;
+	tbit = 8'd0;
+	rbit = 8'd0;
 	rx = 0;
 end
 
@@ -38,7 +38,7 @@ always @(posedge clk) begin
 	end else begin
 									// Send/receive
 //			sclk = ~sclk;
-		if(rbit == 127 && tbit == 127) begin
+		if(rbit == 128 && tbit == 128) begin
 //				#5 sclk = ~sclk;
 //			end else begin
 			done = 1;
@@ -50,29 +50,25 @@ always @(posedge clk) begin
 end
 //
 always begin
-//	if(state == 1'b1) begin
-		#5 sclk = ~sclk;
-//	end else begin
-//		sclk = 1'b0;
-//	end
+	#5 sclk = ~sclk;
 end
 
 always @(posedge sclk) begin
-	if(tbit >= 7'd0)begin
+	if(state == 1'b1 && tbit < 8'd128)begin
 		mosi = tx[tbit];
-		tbit <= tbit - 1;
-	end else begin //if(currbit == 4'd0) all 8 bits are sent
+		tbit <= tbit + 1;
+	end else if(state == 1'b0) begin //if(currbit == 4'd0) all 8 bits are sent
 		mosi = 0;
-		tbit = 7'd127;
+		tbit = 8'd0;
 	end
 end
 
 always @(negedge sclk) begin
-	if(rbit >= 7'd0)begin
-		rx = {rx[126:0], miso};
-		rbit <= rbit - 1;
-	end else begin
-		rbit = 7'd127;
+	if(state == 1'b1 && rbit < 8'd128)begin
+		rx = {rx[1:127], miso};
+		rbit <= rbit + 1;
+	end else if(state == 1'b0) begin
+		rbit = 8'd0;
 	end
 end
 
