@@ -23,24 +23,14 @@ initial begin
 end
 
 always @(posedge clk) begin
-	if(state == 1'b0) begin
-								//IDLE
-//			sclk = 1'b0;
-//			mosi = 0;
-			
-			if(start == 1'b1) begin
-//				rbit = 7'd127;
-//				tbit = 7'd127;
-				state = 1'b1;
-				done = 0;
-				cs_n = 1'b0;
-			end
-	end else begin
-									// Send/receive
-//			sclk = ~sclk;
+	if(state == 1'b0) begin//IDLE
+		if(start == 1'b1) begin
+			state = 1'b1;
+			done = 0;
+			cs_n = 1'b0;
+		end
+	end else begin// Send/receive
 		if(rbit == 128 && tbit == 128) begin
-//				#5 sclk = ~sclk;
-//			end else begin
 			done = 1;
 			state = 1'd0;
 			cs_n = 1'b1;
@@ -48,7 +38,7 @@ always @(posedge clk) begin
 	end
 		
 end
-//
+
 always begin
 	#5 sclk = ~sclk;
 end

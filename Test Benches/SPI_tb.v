@@ -45,11 +45,11 @@ initial begin
 	start = 1'b0;
 	txMain = 128'h00112233445566778899aabbccddeeff;
 	txSub = 128'h0;
-//	miso = 1'b1;
 	#20 start = 1'b1;
 	#20 start = 1'b0;
 	#1800
-	
+	$display("rxMain = %h", rxMain);
+	$display("rxSub = %h", rxSub);
 	
 	txMain = 128'h99999999999999999;
 	txSub = 128'h555555555555555555;
@@ -58,13 +58,17 @@ initial begin
 	#20 start = 1'b0;
 	#1800
 
+	$display("rxMain = %h", rxMain);
+	$display("rxSub = %h", rxSub);
 	
 	txMain = 128'habde1;
 	txSub = 128'hfa4d;
 	start = 1'b1;
 	#20 start = 1'b0;
 	#1800;
-
+	
+	$display("rxMain = %h", rxMain);
+	$display("rxSub = %h", rxSub);
 	
 end
 

@@ -28,22 +28,18 @@ always @ (negedge sclk) begin
     end
 end
 
-//assign rx = rx_reg;
 assign done = i==128;
 
 //send on posedge
 always @ (posedge sclk) begin
     if (cs == 1'b0 && j<128) begin
         sdo = tx[j];
-//        tx <= tx<<1;
         j<=j+1;
     end
     else begin
         j<=0;
     end
 end
-
-//assign tx_reg = tx;
 
 
 endmodule
