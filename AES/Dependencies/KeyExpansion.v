@@ -1,6 +1,9 @@
-module KeyExpansion #(parameter Nk=4,parameter Nr=10)(
-    input [0:(Nk*32)-1] key,
-    output reg [0:(128*(Nr+1))-1] w
+module KeyExpansion (
+    // input cs,
+    input [0:3] Nk,
+    input [0:3] Nr, 
+    input [0:(8*32)-1] key,
+    output reg [0:(128*(14+1))-1] w
 );
 
 // Rotate [a0,a1,a2,a3] to [a1,a2,a3,a0]
@@ -38,18 +41,21 @@ endfunction
 reg [31:0] temp;
 integer i;
 always @(*) begin 
-    w[0:32*Nk-1] = key[0:32*Nk-1];
+	for(i=0;i<Nk; i=i+1)begin
+		w[i*Nk+:32] = key[i*Nk+:32];
+	end
+	 
     // i = Nk ; i<Nb*(Nr+1) ;i++
-    for(i=Nk;i<4*(Nr+1); i=i+1) begin :KeyExp
-        temp = w[(i-1)*32+:32];
-        if(i%Nk==0) begin
-            // temp = SubWord(Rotword(temp)) ^ Rcon(i/Nk);     
-            temp = SubWord(Rotword(temp)) ^ {Rcon(i/Nk),8'h00,8'h00,8'h00};
-        end
-        else if(Nk>6 && i%Nk==4) begin
-            temp = SubWord(temp);
-        end
-        w[i*32+:32] = w[(i-Nk)*32+:32] ^ temp;
+	for(i=Nk;i<4*(Nr+1); i=i+1) begin :KeyExp
+		temp = w[(i-1)*32+:32];
+		if(i%Nk==0) begin
+			// temp = SubWord(Rotword(temp)) ^ Rcon(i/Nk);     
+			temp = SubWord(Rotword(temp)) ^ {Rcon(i/Nk),8'h00,8'h00,8'h00};
+		end
+		else if(Nk>6 && i%Nk==4) begin
+			temp = SubWord(temp);
+		end
+		w[i*32+:32] = w[(i-Nk)*32+:32] ^ temp;
     end
 end
 

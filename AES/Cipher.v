@@ -1,4 +1,5 @@
 module Cipher #(parameter Nk = 4,parameter Nr=10)( //Nk = 4 for 128 bit key, 6 for 192 bit key, 8 for 256 bit key
+    // input cs,
     input [0:127]init,
     input [0:128*(Nr+1)-1] w,
     output [0:127] Encrypted_Msg

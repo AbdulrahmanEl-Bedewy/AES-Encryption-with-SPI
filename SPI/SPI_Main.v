@@ -2,7 +2,7 @@ module SPI_Main (
 	input clk,
 	input miso,
 	input start,
-	input [0:127] tx,
+	input [0:257] tx,
 	output reg [0:127] rx,
 	output reg cs_n,
 	output reg sclk,
@@ -14,6 +14,7 @@ module SPI_Main (
 reg [7:0] tbit;
 reg [7:0] rbit;
 reg state; // 00 send/receive 1 done
+reg size;
 initial begin
 	state = 1'b0;
 	sclk = 1'b0;
@@ -28,6 +29,11 @@ always @(posedge clk) begin
 			state = 1'b1;
 			done = 0;
 			cs_n = 1'b0;
+			case(tx[0:1])
+                00: size = 130;
+                01: size = 198;
+                10: size = 258;
+            endcase
 		end
 	end else begin// Send/receive
 		if(rbit == 128 && tbit == 128) begin
