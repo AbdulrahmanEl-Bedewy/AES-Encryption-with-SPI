@@ -1,13 +1,11 @@
 module AES_Encrypt_tb(
-    output [127:0] out
+    output [0:127] rxMain
 );
 
 
 
 reg [0:257] txMain;
-wire [0:127] rxMain;
-
-
+//wire [0:127] rxMain;
 
 wire miso;
 reg start;
@@ -34,7 +32,7 @@ SPI_Main spM(
 
 AES_Encrypt Encrypt(
     .cs(cs_n),
-    .sclk(clk),
+    .sclk(sclk),
     .sdi(mosi),
     .sdo(miso)
 );
@@ -42,33 +40,46 @@ AES_Encrypt Encrypt(
 initial begin
 	clk = 1'b0;
 	start = 1'b0;
+//=============================TEST 1============================================
 	txMain = 130'h000102030405060708090a0b0c0d0e0f;
+//	txMain = 130'h2b7e151628aed2a6abf7158809cf4f3c;
 	#20 start = 1'b1;
 	#20 start = 1'b0;
 	#1800
-	$display("rxMain = %h", rxMain);
+	$display("Key Used = %h", txMain);
 	
     txMain = 130'h00112233445566778899aabbccddeeff;
 	#20 start = 1'b1;
 	#20 start = 1'b0;
 	#1800
-	$display("rxMain = %h", rxMain);
+	$display("Msg Used = %h", txMain);
 	
-	// start = 1'b1;
-	// #20 start = 1'b0;
-	// #1800
+	txMain = 130'h0;
+	#20 start = 1'b1;
+	#20 start = 1'b0;
+	#1800
+	$display("Encrypted Msg = %h", rxMain);
 
-	// $display("rxMain = %h", rxMain);
-	// $display("rxSub = %h", rxSub);
+//=============================TEST 2============================================
+	txMain = 258'h000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f;
+	txMain = {2'b10, txMain[2:257]};
+//	txMain = 130'h2b7e151628aed2a6abf7158809cf4f3c;
+	#20 start = 1'b1;
+	#20 start = 1'b0;
+	#2800
+	$display("Key Used = %h", txMain);
 	
-	// txMain = 128'habde1;
-	// txSub = 128'hfa4d;
-	// start = 1'b1;
-	// #20 start = 1'b0;
-	// #1800;
+    txMain = 130'h00112233445566778899aabbccddeeff;
+	#20 start = 1'b1;
+	#20 start = 1'b0;
+	#1800
+	$display("Msg Used = %h", txMain);
 	
-	// $display("rxMain = %h", rxMain);
-	// $display("rxSub = %h", rxSub);
+	txMain = 130'h0;
+	#20 start = 1'b1;
+	#20 start = 1'b0;
+	#1800
+	$display("Encrypted Msg = %h", rxMain);
 	
 end
 

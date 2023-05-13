@@ -1,10 +1,10 @@
 module SPI_tb(
 
-output reg [127:0] txMain,
+output reg [257:0] txMain,
 output wire [127:0] rxMain,
 
 output reg [127:0] txSub,
-output wire [127:0] rxSub
+output wire [257:0] rxSub
 );
 
 
@@ -43,32 +43,39 @@ SPI_Sub spS(
 initial begin
 	clk = 1'b0;
 	start = 1'b0;
-	txMain = 128'h00112233445566778899aabbccddeeff;
+	txMain = 258'h18E73B0F7DA0E6452C810F32B809079E562F8EAD2522C6B7B;
+//	txMain = 258'h8E73B0F7DA0E6452C810F32B809079E562F8EAD2522C6B7B;
+	txMain = {2'b01, txMain[255:0]};
 	txSub = 128'h0;
 	#20 start = 1'b1;
 	#20 start = 1'b0;
-	#1800
+	#2800
 	$display("rxMain = %h", rxMain);
 	$display("rxSub = %h", rxSub);
-	
-	txMain = 128'h99999999999999999;
+	if(rxSub == txMain)
+		$display("3ayz anam");
+		
+	txMain = 258'h99999999999999999;
 	txSub = 128'h555555555555555555;
 	
 	start = 1'b1;
 	#20 start = 1'b0;
-	#1800
+	#2800
 
 	$display("rxMain = %h", rxMain);
 	$display("rxSub = %h", rxSub);
 	
-	txMain = 128'habde1;
+	txMain = 258'h2603DEB1015CA71BE2B73AEF0857D77811F352C073B6108D72D9810A30914DFF4;
 	txSub = 128'hfa4d;
 	start = 1'b1;
 	#20 start = 1'b0;
-	#1800;
+	#2800;
 	
 	$display("rxMain = %h", rxMain);
-	$display("rxSub = %h", rxSub);
+	$display("txMain = %h", txMain);
+	$display("rxSub  = %h", rxSub);
+	if(rxSub == txMain)
+		$display("sha8al el7");
 	
 end
 

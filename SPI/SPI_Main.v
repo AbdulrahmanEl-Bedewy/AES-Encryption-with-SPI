@@ -11,16 +11,17 @@ module SPI_Main (
 );
 
 
-reg [7:0] tbit;
-reg [7:0] rbit;
+reg [8:0] tbit;
+reg [8:0] rbit;
 reg state; // 00 send/receive 1 done
-reg size;
+reg [8:0]size;
 initial begin
 	state = 1'b0;
 	sclk = 1'b0;
-	tbit = 8'd0;
-	rbit = 8'd0;
+	tbit = 9'd0;
+	rbit = 9'd0;
 	rx = 0;
+	size = 258;
 end
 
 always @(posedge clk) begin
@@ -30,13 +31,13 @@ always @(posedge clk) begin
 			done = 0;
 			cs_n = 1'b0;
 			case(tx[0:1])
-                00: size = 130;
-                01: size = 198;
-                10: size = 258;
-            endcase
+                2'b00: size = 130;
+                2'b01: size = 194;
+                2'b10: size = 258;
+			endcase
 		end
 	end else begin// Send/receive
-		if(rbit == 128 && tbit == 128) begin
+		if(rbit == size && tbit == size) begin
 			done = 1;
 			state = 1'd0;
 			cs_n = 1'b1;
@@ -50,21 +51,23 @@ always begin
 end
 
 always @(posedge sclk) begin
-	if(state == 1'b1 && tbit < 8'd128)begin
-		mosi = tx[tbit];
+	if(state == 1'b1 && tbit < size)begin
+		mosi = tx[ 258 - size + tbit];
 		tbit <= tbit + 1;
 	end else if(state == 1'b0) begin //if(currbit == 4'd0) all 8 bits are sent
 		mosi = 0;
-		tbit = 8'd0;
+		tbit = 9'd0;
 	end
 end
 
 always @(negedge sclk) begin
-	if(state == 1'b1 && rbit < 8'd128)begin
-		rx = {rx[1:127], miso};
+	if(state == 1'b1) begin
 		rbit <= rbit + 1;
+		if(rbit < 9'd128)begin
+			rx = {rx[1:127], miso};
+		end
 	end else if(state == 1'b0) begin
-		rbit = 8'd0;
+		rbit = 9'd0;
 	end
 end
 
