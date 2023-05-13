@@ -52,7 +52,10 @@ end
 
 always @(posedge sclk) begin
 	if(state == 1'b1 && tbit < size)begin
-		mosi = tx[ 258 - size + tbit];
+		if(tbit < 2)
+			mosi = tx[tbit];
+		else
+			mosi = tx[ 258 - size + tbit];
 		tbit <= tbit + 1;
 	end else if(state == 1'b0) begin //if(currbit == 4'd0) all 8 bits are sent
 		mosi = 0;
