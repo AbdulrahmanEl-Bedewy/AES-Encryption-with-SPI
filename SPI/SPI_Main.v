@@ -1,10 +1,11 @@
 module SPI_Main (
 	input clk,
-	input miso,
+	input miso[0:1],
+	input sel,
 	input start,
 	input [0:257] tx,
 	output reg [0:127] rx,
-	output reg cs_n,
+	output reg cs_n[0:1],
 	output reg sclk,
 	output reg mosi,
 	output reg done
@@ -25,11 +26,12 @@ initial begin
 end
 
 always @(posedge clk) begin
+	sclk = ~sclk;
 	if(state == 1'b0) begin//IDLE
 		if(start == 1'b1) begin
 			state = 1'b1;
 			done = 0;
-			cs_n = 1'b0;
+			cs_n[sel] = 1'b0;
 			case(tx[0:1])
                 2'b00: size = 130;
                 2'b01: size = 194;
@@ -40,15 +42,13 @@ always @(posedge clk) begin
 		if(rbit == size && tbit == size) begin
 			done = 1;
 			state = 1'd0;
-			cs_n = 1'b1;
+			cs_n[0] = 1'b1;
+			cs_n[1] = 1'b1;
 		end
 	end
 		
 end
 
-always begin
-	#5 sclk = ~sclk;
-end
 
 always @(posedge sclk) begin
 	if(state == 1'b1 && tbit < size)begin
@@ -67,7 +67,7 @@ always @(negedge sclk) begin
 	if(state == 1'b1) begin
 		rbit <= rbit + 1;
 		if(rbit < 9'd128)begin
-			rx = {rx[1:127], miso};
+			rx = {rx[1:127], miso[sel]};
 		end
 	end else if(state == 1'b0) begin
 		rbit = 9'd0;

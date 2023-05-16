@@ -37,7 +37,7 @@ AES_Encrypt Encrypt(
     .sdo(miso)
 );
 
-AES_Dencrypt Decrypt(
+AES_Decrypt Decrypt(
     .cs(cs_n),
     .sclk(sclk),
     .sdi(mosi2),

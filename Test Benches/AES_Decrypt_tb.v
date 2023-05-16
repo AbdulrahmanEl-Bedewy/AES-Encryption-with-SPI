@@ -28,7 +28,7 @@ SPI_Main spM(
 );
 
 
-AES_Dencrypt Decrypt(
+AES_Decrypt Decrypt(
     .cs(cs_n),
     .sclk(sclk),
     .sdi(mosi),

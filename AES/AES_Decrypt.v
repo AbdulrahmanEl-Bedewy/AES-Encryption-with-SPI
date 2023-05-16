@@ -1,4 +1,4 @@
-module AES_Dencrypt(
+module AES_Decrypt(
     input cs,
     input sclk,
     input sdi,
