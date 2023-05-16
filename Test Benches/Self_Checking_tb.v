@@ -17,10 +17,10 @@ localparam CheckAnswer = 7;
 
 reg [0:257] txMain;
 wire [0:127] rxMain;
-wire miso[0:1];
+wire [0:1]miso;
 reg sel;
 reg start;
-wire cs_n[0:1];
+wire [0:1]cs_n;
 wire sclk;
 wire mosi;
 wire done;
@@ -41,14 +41,14 @@ SPI_Main spM(
 
 AES_Encrypt Encrypt(
     .cs(cs_n[0]),
-    .sclk(sclk),
+    .sclk(clk),
     .sdi(mosi),
     .sdo(miso[0])
 );
 
 AES_Decrypt Decrypt(
     .cs(cs_n[1]),
-    .sclk(sclk),
+    .sclk(clk),
     .sdi(mosi),
     .sdo(miso[1])
 );
@@ -56,7 +56,8 @@ reg [0:2] state; //0 = idle, 1 = send key, 2 = send msg, 3 = receive enc, 4 = se
 reg sFlag;
 integer CycleCount;
 reg [0:127] encMSG, decMSG;
-reg [0:257] testKeys[0:2] = {258'h000102030405060708090a0b0c0d0e0f,{2'b01,256'h000102030405060708090a0b0c0d0e0f1011121314151617},{2'b10,256'h000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f}};
+reg [0:257] testKeys[0:2];
+
 reg [0:127] testMsg = 128'h00112233445566778899aabbccddeeff;
 
 reg clk;
@@ -68,6 +69,9 @@ initial begin
     sFlag = 0;
     CycleCount = 0;
     start = 0;
+	testKeys[0][0:257] = 258'h000102030405060708090a0b0c0d0e0f;
+	testKeys[1][0:257] = {2'b01,256'h000102030405060708090a0b0c0d0e0f1011121314151617};
+	testKeys[2][0:257] = {2'b10,256'h000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f};
 end
 
 always #1 clk = ~clk;

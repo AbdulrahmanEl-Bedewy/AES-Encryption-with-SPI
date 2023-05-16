@@ -7,10 +7,11 @@ module AES_Encrypt_tb(
 reg [0:257] txMain;
 //wire [0:127] rxMain;
 
-wire miso;
+wire [0:1]miso;
 reg start;
 reg clk;
-wire cs_n;
+reg sel;
+wire [0:1]cs_n;
 wire sclk;
 wire mosi;
 wire done;
@@ -20,6 +21,7 @@ wire doneSub;
 SPI_Main spM(
 	.clk(clk),
 	.miso(miso),
+	.sel(sel),
 	.start(start),
 	.tx(txMain),
 	.rx(rxMain),
@@ -31,22 +33,16 @@ SPI_Main spM(
 
 
 AES_Encrypt Encrypt(
-    .cs(cs_n),
+    .cs(cs_n[0]),
     .sclk(sclk),
     .sdi(mosi),
-    .sdo(miso)
-);
-
-AES_Decrypt Decrypt(
-    .cs(cs_n),
-    .sclk(sclk),
-    .sdi(mosi2),
-    .sdo(miso2)
+    .sdo(miso[0])
 );
 
 initial begin
 	clk = 1'b0;
 	start = 1'b0;
+	sel=0;
 //=============================TEST 1============================================
 	txMain = 130'h000102030405060708090a0b0c0d0e0f;
 //	txMain = 130'h2b7e151628aed2a6abf7158809cf4f3c;

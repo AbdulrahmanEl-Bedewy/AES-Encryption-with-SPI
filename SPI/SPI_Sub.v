@@ -17,7 +17,8 @@ initial begin
     j=0;
     rx=0;
     size = 130;
-	 done = 0;
+	done = 0;
+    sdo=0;
 end
 
 //receive on negedge
