@@ -24,7 +24,7 @@ wire [0:1]cs_n;
 wire sclk;
 wire mosi;
 wire done;
-wire doneSub;
+reg clk;
 
 SPI_Main spM(
 	.clk(clk),
@@ -60,8 +60,13 @@ reg [0:257] testKeys[0:2];
 
 reg [0:127] testMsg = 128'h00112233445566778899aabbccddeeff;
 
-reg clk;
+
+// reg [0:1] testNum;
+// reg startTest;
+reg prevDone;
 initial begin
+    // startTest = 1'b1;
+    // testNum = 2'b00;
     encMSG = 0;
     clk = 0;
     decMSG = 0;
@@ -72,6 +77,7 @@ initial begin
 	testKeys[0][0:257] = 258'h000102030405060708090a0b0c0d0e0f;
 	testKeys[1][0:257] = {2'b01,256'h000102030405060708090a0b0c0d0e0f1011121314151617};
 	testKeys[2][0:257] = {2'b10,256'h000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f};
+    prevDone = 0;
 end
 
 always #1 clk = ~clk;
@@ -96,7 +102,7 @@ always @(posedge clk) begin
             else begin
                 start = 1'b0;
             end
-            if(done==1) begin
+            if(done==1 && prevDone == 0) begin
                 state = SendMsg;
                 sFlag = 0;
             end
@@ -112,7 +118,7 @@ always @(posedge clk) begin
             else begin
                 start = 1'b0;
             end
-            if(done==1) begin
+            if(done==1 && prevDone == 0) begin
                 state = ReceiveEnc;
                 sFlag = 0;
             end
@@ -131,7 +137,7 @@ always @(posedge clk) begin
             else begin
                 start = 1'b0;
             end
-            if(done==1) begin
+            if(done==1 && prevDone == 0) begin
                 encMSG = rxMain;
                 state = SendKey2;
                 sFlag = 0;
@@ -148,7 +154,7 @@ always @(posedge clk) begin
             else begin
                 start = 1'b0;
             end
-            if(done==1) begin
+            if(done==1 && prevDone == 0) begin
                 state = SendEnc;
                 sFlag = 0;
             end
@@ -164,7 +170,7 @@ always @(posedge clk) begin
             else begin
                 start = 1'b0;
             end
-            if(done==1) begin
+            if(done==1 && prevDone == 0) begin
                 state = ReceiveDec;
                 sFlag = 0;
             end
@@ -183,7 +189,7 @@ always @(posedge clk) begin
             else begin
                 start = 1'b0;
             end
-            if(done==1) begin
+            if(done==1 && prevDone == 0) begin
                 decMSG = rxMain;
                 state = CheckAnswer;
                 sFlag = 0;
@@ -202,6 +208,9 @@ always @(posedge clk) begin
             state = Idle;
         end
     endcase
+    if(done != prevDone) begin
+        prevDone = done;
+    end
 end
 
 
