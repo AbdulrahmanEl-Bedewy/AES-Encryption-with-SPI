@@ -1,7 +1,7 @@
 module Self_Checking_tb (
     // input clk,
-    input startTest,
-    input [0:1] testNum,
+//    input startTest,
+//    input [0:1] testNum,
     output reg pass,
     output reg fail
 );
@@ -61,12 +61,12 @@ reg [0:257] testKeys[0:2];
 reg [0:127] testMsg = 128'h00112233445566778899aabbccddeeff;
 
 
-// reg [0:1] testNum;
-// reg startTest;
+ reg [0:1] testNum;
+ reg startTest;
 reg prevDone;
 initial begin
-    // startTest = 1'b1;
-    // testNum = 2'b00;
+     startTest = 1'b1;
+     testNum = 2'b00;
     encMSG = 0;
     clk = 0;
     decMSG = 0;
