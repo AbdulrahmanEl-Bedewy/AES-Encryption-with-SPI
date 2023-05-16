@@ -77,7 +77,7 @@ initial begin
 	txMain = 130'h0;
 	#20 start = 1'b1;
 	#20 start = 1'b0;
-	#1800
+	#1900
 	$display("Encrypted Msg = %h", rxMain);
 
 //=============================TEST 3============================================
@@ -92,7 +92,7 @@ initial begin
     txMain = 130'h00112233445566778899aabbccddeeff;
 	#20 start = 1'b1;
 	#20 start = 1'b0;
-	#1800
+	#1900
 	$display("Msg Used = %h", txMain);
 	
 	txMain = 130'h0;

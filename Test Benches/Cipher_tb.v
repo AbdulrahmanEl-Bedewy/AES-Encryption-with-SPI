@@ -36,10 +36,12 @@ initial begin
 	 Nr = 14;
 	 Nk = 8;
 	 clk = 0;
-	 cs = 1;
-	 
-    in = 128'h00112233445566778899aabbccddeeff;
+	 cs = 0;
+	 in = 128'h00112233445566778899aabbccddeeff;
     key = 256'h000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f;
+	 
+	 #10 cs = 1;
+	 
     
     #1000;
     $display("out = %h \n",out);

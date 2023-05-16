@@ -98,7 +98,8 @@ always @(posedge done) begin
 			end
 		end
 		Encryption: begin
-				state = Key;			
+				state = Key;	
+				cs_Cipher = 0;
 		end
 	endcase
 	

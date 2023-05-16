@@ -50,7 +50,7 @@ always @(negedge clk) begin
 			round = 1;
 			state = InitialKey;
     end
-    if(round <= Nr)begin       
+    else if(round <= Nr)begin       
         case(state)
             InitialKey: begin
                 iW = w[0+:128];
@@ -75,7 +75,10 @@ always @(negedge clk) begin
             end
             AddKey: begin
                 iW = w[128*round+:128];
-                iKey = aMix;
+					 if(round == Nr)
+                  iKey = aShift;
+                else  
+						iKey = aMix;
                 round = round + 1;
                 state = SubByte;
             end
@@ -86,9 +89,6 @@ always @(negedge clk) begin
     end
 end
 
-
 assign Encrypted_Msg = aKey;
-
-
 
 endmodule
