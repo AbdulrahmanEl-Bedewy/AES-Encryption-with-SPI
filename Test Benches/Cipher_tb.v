@@ -3,31 +3,50 @@ module Cipher_tb(
 );
 
 
-localparam Nr = 14;
-localparam Nk = 8;
+reg [0:3] Nr;
+reg [0:3] Nk;
 
 reg [127:0] in;
-reg [32*Nk-1:0] key;
-wire [(128*(Nr+1))-1:0] w;
+reg [255:0] key;
+wire [1919:0] w;
 
-KeyExpansion #(Nk,Nr)KE1 (
+KeyExpansion KE1 (
+    .Nk(Nk),
+    .Nr(Nr), 
     .key(key),
     .w(w)
 );
 
-Cipher #(Nk,Nr) C1 (
-    .init(in),
-    .w(w),
-    .Encrypted_Msg(out)
+reg cs;
+reg clk;
+wire [0:127] Msg;
+wire flag;
+
+Cipher C1 (
+	.cs(cs),
+	.clk(clk),
+	.Nr(Nr),
+	.init(in),
+	.w(w),
+	.Encrypted_Msg(out),
+	.flag(flag)
 );
 
 initial begin
+	 Nr = 14;
+	 Nk = 8;
+	 clk = 0;
+	 cs = 1;
+	 
     in = 128'h00112233445566778899aabbccddeeff;
     key = 256'h000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f;
     
-    #10000;
+    #1000;
     $display("out = %h \n",out);
 end
 
+always begin
+	#5 clk = ~clk;
+end
 
 endmodule

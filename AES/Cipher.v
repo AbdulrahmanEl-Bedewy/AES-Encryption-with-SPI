@@ -1,55 +1,94 @@
-module Cipher #(parameter Nk = 4,parameter Nr=10)( //Nk = 4 for 128 bit key, 6 for 192 bit key, 8 for 256 bit key
-    // input cs,
+module Cipher ( //Nk = 4 for 128 bit key, 6 for 192 bit key, 8 for 256 bit key
+    input cs,
+    input clk,
+    input [0:3] Nr,
     input [0:127]init,
-    input [0:128*(Nr+1)-1] w,
-    output [0:127] Encrypted_Msg
+    input [0:(128*(14+1))-1] w,
+    output [0:127] Encrypted_Msg,
+    output reg flag
 );
 
-wire [0:127] state [0:Nr],aSub[0:Nr],aShift[0:Nr],aMix[0:Nr];
+localparam InitialKey = 1;
+localparam SubByte = 2;
+localparam Shift = 3;
+localparam Mix = 4;
+localparam AddKey = 5;
+
+reg [0:127] iW, iKey , iSub, iShift, iMix, temp;
+wire [0:127] aKey , aSub, aShift, aMix;
+reg [0:3] state;
+reg [0:3] round;
 
 
 AddRoundKey k1(
-    .istate(init),
-    .key(w[0:127]),
-    .ostate(state[0])
+    .istate(iKey),
+    .key(iW),
+    .ostate(aKey)
+);
+SubBytes subBytes_inst1(
+    .istate(iSub),
+    .ostate(aSub)
+);
+ShiftRows shiftRows_inst1(
+    .istate(iShift),
+    .ostate(aShift)
+);
+MixColumns mixColumns_inst1(
+    .state(iMix),
+    .ostate(aMix)
 );
 
-genvar round;
-generate
-    for(round=1; round<Nr; round=round+1) begin :cipher
-        SubBytes subBytes_inst1(
-            .istate(state[round-1]),
-            .ostate(aSub[round])
-        );
-        ShiftRows shiftRows_inst1(
-            .istate(aSub[round]),
-            .ostate(aShift[round])
-        );
-        MixColumns mixColumns_inst1(
-            .state(aShift[round]),
-            .ostate(aMix[round])
-        );
-        AddRoundKey k2(
-            .istate(aMix[round]),
-            .key(w[round*128+:128]),
-            .ostate(state[round])
-        );
+
+initial begin
+    round = 1;
+    state = InitialKey;
+    flag = 0;
+end
+
+always @(negedge clk) begin
+	if(cs == 0)begin
+			round = 1;
+			state = InitialKey;
     end
-    SubBytes subBytes_inst2(
-        .istate(state[Nr-1]),
-        .ostate(aSub[Nr])
-    );
-    ShiftRows shiftRows_inst2(
-        .istate(aSub[Nr]),
-        .ostate(aShift[Nr])
-    );
-    AddRoundKey k3(
-        .istate(aShift[Nr]),
-        .key(w[Nr*128+:128]),
-        .ostate(state[Nr])
-    );
-endgenerate
-assign Encrypted_Msg = state[Nr];
+    if(round <= Nr)begin       
+        case(state)
+            InitialKey: begin
+                iW = w[0+:128];
+                iKey = init;
+                state = SubByte;
+					 flag = 0;
+            end
+            SubByte: begin
+                iSub = aKey;
+                state = Shift;
+            end
+            Shift: begin
+                iShift = aSub;
+                if(round == Nr)
+                    state = AddKey;
+                else
+                    state = Mix;
+            end
+            Mix: begin
+                iMix = aShift;
+                state = AddKey;
+            end
+            AddKey: begin
+                iW = w[128*round+:128];
+                iKey = aMix;
+                round = round + 1;
+                state = SubByte;
+            end
+        endcase
+    end
+    else begin
+        flag = 1;
+    end
+end
+
+
+assign Encrypted_Msg = aKey;
+
 
 
 endmodule

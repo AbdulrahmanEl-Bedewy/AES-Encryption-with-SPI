@@ -10,10 +10,10 @@ reg [127:0] in;
 reg [32*Nk-1:0] key;
 wire [(128*(Nr+1))-1:0] w;
 
-KeyExpansion #(Nk,Nr)KE1 (
-    .key(key),
-    .w(w)
-);
+//KeyExpansion #(Nk,Nr)KE1 (
+//    .key(key),
+//    .w(w)
+//);
 
 InvCipher #(Nk,Nr) C1 (
     .init(in),

@@ -11,9 +11,9 @@ wire [0:257] rx;
 wire done;
 
 // Sizes and stage variable
-reg flag;
 reg [0:3] Nk;
 reg [0:3] Nr;
+wire flag;
 
 // Key expansion variables
 // reg cs_Exp;
@@ -23,9 +23,8 @@ wire [0:(128*(14+1))-1] w;
 // Cipher module msg and final output
 reg cs_Cipher;
 reg [0:127] init;
-wire [0:127] Encrypted_Msg128;
-wire [0:127] Encrypted_Msg196;
-wire [0:127] Encrypted_Msg256;
+wire [0:127] Encrypted_Msg;
+
 
 SPI_Sub SPI1(
     .cs(cs),
@@ -45,28 +44,14 @@ KeyExpansion KE1 (
     .w(w)
 );
 
-Cipher #(4,10) C1 (
-    // .cs(cs_Cipher),
-    //.Nr(Nr),
+Cipher C1 (
+	 .cs(cs_Cipher),
+	 .clk(sclk),
+    .Nr(Nr),
     .init(init),
-    .w(w[0:(128*(10+1))-1]),
-    .Encrypted_Msg(Encrypted_Msg128)
-);
-
-Cipher #(6,12) C2 (
-    // .cs(cs_Cipher),
-    //.Nr(Nr),
-    .init(init),
-    .w(w[0:(128*(12+1))-1]),
-    .Encrypted_Msg(Encrypted_Msg196)
-);
-
-Cipher #(8,14) C3 (
-    // .cs(cs_Cipher),
-    //.Nr(Nr),
-    .init(init),
-    .w(w[0:(128*(14+1))-1]),
-    .Encrypted_Msg(Encrypted_Msg256)
+    .w(w),
+    .Encrypted_Msg(Encrypted_Msg),
+	 .flag(flag)
 );
 
 localparam Key = 0;
@@ -76,9 +61,10 @@ reg [0:1] state;
 
 
 initial begin
-    flag = 0;
-	 tx = 0;
-	 state = 0;
+//    flag = 0;
+	tx = 0;
+	state = 0;
+	cs_Cipher = 0;
 end
 
 
@@ -108,27 +94,19 @@ always @(posedge done) begin
 			if(done == 1) begin
 				init = rx[257-:128];
 				state = Encryption;
+				cs_Cipher = 1;
 			end
 		end
 		Encryption: begin
-			state = Key;
+				state = Key;			
 		end
 	endcase
 	
 end
 
 always @(posedge sclk)begin 
-	case(Nk)
-		 4'd4: begin 
-			  tx = Encrypted_Msg128;
-		 end
-		 4'd6: begin 
-			  tx = Encrypted_Msg196;
-		 end
-		 4'd8: begin 
-			  tx = Encrypted_Msg256;
-		 end
-	endcase
+ 	if(state == Encryption && flag == 1)
+		tx = Encrypted_Msg;
 end 
 
 endmodule
