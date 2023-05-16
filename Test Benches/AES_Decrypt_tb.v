@@ -3,7 +3,6 @@ module AES_Decrypt_tb(
 );
 
 
-
 reg [0:257] txMain;
 //wire [0:127] rxMain;
 
@@ -14,7 +13,6 @@ wire cs_n;
 wire sclk;
 wire mosi;
 wire done;
-wire doneSub;
 
 
 SPI_Main spM(
@@ -92,7 +90,7 @@ initial begin
     txMain = 130'h8ea2b7ca516745bfeafc49904b496089;
 	#20 start = 1'b1;
 	#20 start = 1'b0;
-	#1800
+	#1900
 	$display("Msg Used = %h", txMain);
 	
 	txMain = 130'h0;

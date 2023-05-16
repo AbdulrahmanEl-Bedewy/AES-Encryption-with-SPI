@@ -37,6 +37,13 @@ AES_Encrypt Encrypt(
     .sdo(miso)
 );
 
+AES_Dencrypt Decrypt(
+    .cs(cs_n),
+    .sclk(sclk),
+    .sdi(mosi2),
+    .sdo(miso2)
+);
+
 initial begin
 	clk = 1'b0;
 	start = 1'b0;

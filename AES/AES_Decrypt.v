@@ -11,7 +11,7 @@ wire [0:257] rx;
 wire done;
 
 // Sizes and stage variable
-reg flag;
+wire flag;
 reg [0:3] Nk;
 reg [0:3] Nr;
 
@@ -22,9 +22,9 @@ wire [0:(128*(14+1))-1] w;
 
 // InvCipher module msg and final output
 reg [0:127] init;
-wire [0:127] Decrypted_Msg128;
-wire [0:127] Decrypted_Msg196;
-wire [0:127] Decrypted_Msg256;
+wire [0:127] Decrypted_Msg;
+reg cs_decipher;
+
 
 SPI_Sub SPI1(
     .cs(cs),
@@ -43,22 +43,14 @@ KeyExpansion KE1 (
     .w(w)
 );
 
-InvCipher #(4,10) C1 (
-    .init(init),
-    .w(w[0:(128*(10+1))-1]),
-    .Decrypted_Msg(Decrypted_Msg128)
-);
-
-InvCipher #(6,12) C2 (
-    .init(init),
-    .w(w[0:(128*(12+1))-1]),
-    .Decrypted_Msg(Decrypted_Msg196)
-);
-
-InvCipher #(8,14) C3 (
-    .init(init),
-    .w(w[0:(128*(14+1))-1]),
-    .Decrypted_Msg(Decrypted_Msg256)
+InvCipher C1 (
+	.cs(cs_decipher),
+	.clk(sclk),
+	.Nr(Nr),
+	.init(init),
+	.w(w),
+	.Decrypted_Msg(Decrypted_Msg),
+	.flag(flag)
 );
 
 localparam Key = 0;
@@ -66,11 +58,11 @@ localparam Message = 1;
 localparam Decryption = 2;
 reg [0:1] state;
 
-
 initial begin
-    flag = 0;
-    tx = 0;
-    state = 0;
+//    flag = 0;
+	tx = 0;
+	state = 0;
+	cs_decipher = 0;
 end
 
 
@@ -100,27 +92,20 @@ always @(posedge done) begin
 			if(done == 1) begin
 				init = rx[257-:128];
 				state = Decryption;
+				cs_decipher = 1;
 			end
 		end
 		Decryption: begin
-			state = Key;
+				state = Key;	
+				cs_decipher = 0;
 		end
 	endcase
 	
 end
 
 always @(posedge sclk)begin 
-	case(Nk)
-		 4'd4: begin 
-			  tx = Decrypted_Msg128;
-		 end
-		 4'd6: begin 
-			  tx = Decrypted_Msg196;
-		 end
-		 4'd8: begin 
-			  tx = Decrypted_Msg256;
-		 end
-	endcase
+ 	if(state == Decryption && flag == 1)
+		tx = Decrypted_Msg;
 end 
 
 endmodule
