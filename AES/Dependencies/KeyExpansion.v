@@ -1,5 +1,6 @@
 module KeyExpansion (
-    // input cs,
+    input cs_n,
+	 input clk,
     input [0:3] Nk,
     input [0:3] Nr, 
     input [255:0] key,
@@ -40,15 +41,19 @@ endfunction
 
 reg [31:0] temp;
 
-integer i,j;
-always @(*) begin 
-//	for(j=0;j < 8; j=j+1)begin
-//		
-//		if (j < Nk) 
-//		#2;
-//			w[Nk*32-(j+1)*32+:32] = key[j*32+:32];
-//	end
-	 case(Nk)
+reg set;
+integer i;
+initial begin
+	set = 0;
+	i=0;
+end
+
+always @(posedge clk) begin 
+	if(set==0 && cs_n==0) begin
+		set = 1;
+		temp=0;
+		i = Nk;
+		case(Nk)
 		 4'd4: begin 
 			  w[0+:128] = key[0+:128];
 		 end
@@ -58,22 +63,28 @@ always @(*) begin
 		 4'd8: begin 
 			  w[0+:256] = key[0+:256];
 		 end
-	endcase
-// i = Nk ; i<Nb*(Nr+1) ;i++
-	for(i=4;i < 60; i=i+1) begin :KeyExp
-	
-		if (i < 4*(Nr+1) && i >= Nk) begin
-			temp = w[(i-1)*32+:32];
-			if(i%Nk==0) begin
-				// temp = SubWord(Rotword(temp)) ^ Rcon(i/Nk);     
-				temp = SubWord(Rotword(temp)) ^ {Rcon(i/Nk),8'h00,8'h00,8'h00};
-			end
-			else if(Nk>6 && i%Nk==4) begin
-				temp = SubWord(temp);
-			end
-			w[i*32+:32] = w[(i-Nk)*32+:32] ^ temp;
+		endcase
+	end
+	else if (i < 4*(Nr+1) && i >= Nk && set==1) begin
+		set=1;
+		if(i%Nk==0) begin
+			// temp = SubWord(Rotword(temp)) ^ Rcon(i/Nk);     
+			temp = SubWord(Rotword(w[(i-1)*32+:32])) ^ {Rcon(i/Nk),8'h00,8'h00,8'h00};
 		end
-    end
+		else if(Nk>6 && i%Nk==4) begin
+			temp = SubWord(w[(i-1)*32+:32]);
+		end
+		else begin
+			temp = w[(i-1)*32+:32];
+		end
+		w[i*32+:32] = w[(i-Nk)*32+:32] ^ temp;
+		i = i + 1;
+	end
+	else begin
+		set = 0;
+		temp=0;
+		i=0;
+	end    
 end
 
 

@@ -16,7 +16,7 @@ reg [0:3] Nk;
 reg [0:3] Nr;
 
 // Key expansion variables
-// reg cs_Exp;
+reg cs_Exp_n;
 reg [0:(8*32)-1] key;
 wire [0:(128*(14+1))-1] w;
 
@@ -37,6 +37,8 @@ SPI_Sub SPI1(
 );
 
 KeyExpansion KE1 (
+	 .cs_n(cs_Exp_n),
+	 .clk(sclk),
     .Nk(Nk),
     .Nr(Nr),
     .key(key),
@@ -57,12 +59,15 @@ localparam Key = 0;
 localparam Message = 1;
 localparam Decryption = 2;
 reg [0:1] state;
+reg StartKE;
 
 initial begin
 //    flag = 0;
 	tx = 0;
 	state = 0;
 	cs_decipher = 0;
+	cs_Exp_n = 1;
+	StartKE = 0;
 end
 
 
@@ -104,8 +109,17 @@ always @(posedge done) begin
 end
 
 always @(posedge sclk)begin 
- 	if(state == Decryption && flag == 1)
+ 	if(state == Decryption && flag == 1) begin
 		tx = Decrypted_Msg;
+		StartKE = 0;
+	end
+	if(state == Message && StartKE == 0) begin
+		cs_Exp_n = 0;
+		StartKE = 1;
+	end
+	else 
+		cs_Exp_n = 1;
+	
 end 
 
 endmodule
